@@ -1,10 +1,19 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
 #J_Scroll {
-    width: 550px;
-    height: 357px;
+    width: 500px;
+    height: 202px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 #J_Scroll.ZScroll-vertical {
     width: 150px;
-    height: 300px;
+    height: 500px;
+}
+#J_Scroll .ZScroll-item {
 }
 #J_Scroll .ZScroll-item a {
     display: block;
