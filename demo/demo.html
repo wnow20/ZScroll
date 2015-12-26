@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo - zScroll</title>
+
+    <link rel="stylesheet" href="../src/ZScroll.css"/>
+    <link rel="stylesheet" href="demo.css"/>
+</head>
+<body>
+<h3>功能列表</h3>
+<ol>
+    <li>响应式</li>
+    <li>方向,触发方法,自动生成</li>
+    <li>data-* 属性配置</li>
+    <li>拖动</li>
+</ol>
+<h3>左右</h3>
+
+<div id="J_Scroll" class="ZScroll">
+    <div>
+        <a href="#"><img src="img/f1.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f2.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f3.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f4.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f5.jpg" alt=""/></a>
+    </div>
+</div>
+<div>
+    <a href="#" id="J_Scroll_prev">上</a>
+    <a href="#" id="J_Scroll_next">下</a>
+</div>
+<div id="J_currentLeft"></div>
+<script src="jquery.js"></script>
+<script src="../src/ZScroll.js"></script>
+<script>
+    var ele = document.getElementById('J_Scroll');
+    var options = {
+        autoPlay: false,
+        speed: 1000,
+        distance: 1,
+        direction: 0,
+        initialSlide: 0,
+        pauseOnHover: true,
+        vertical: true,
+        infinite: true,
+        smooth: false,
+
+        debug: true,
+    };
+    window._ = new ZScroll(ele, options);
+
+    J_Scroll_prev.onclick = function () {
+        _.prev();
+    };
+    J_Scroll_next.onclick = function () {
+        _.next();
+    };
+</script>
+</body>
+</html>

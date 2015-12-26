@@ -1,0 +1,14 @@
+#J_Scroll {
+    width: 550px;
+    height: 357px;
+}
+#J_Scroll.ZScroll-vertical {
+    width: 150px;
+    height: 300px;
+}
+#J_Scroll .ZScroll-item a {
+    display: block;
+}
+#J_Scroll .ZScroll-item img {
+    vertical-align: top;
+}
