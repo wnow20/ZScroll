@@ -36,17 +36,18 @@
     $(window).on('load', function (e) {
         var ele = document.getElementById('J_Scroll');
         var options = {
-            autoPlay: false,
+            autoPlay: true,
             speed: 500,
+            sleep: 500,
             distance: 1,
-            direction: 1,
+            direction: 0,
             initialSlide: 0,
             pauseOnHover: true,
 //        vertical: true,
             infinite: true,
             smooth: false,
 
-            debug: true,
+            debug: false,
         };
         window._ = new ZScroll(ele, options);
 

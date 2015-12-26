@@ -3,20 +3,19 @@
 
     var defaults = {
         speed: 500,
-        sleep: 2000,
-        direction: 1,
+        sleep: 1000,
         initialSlide: 0,
         pauseOnHover: true,
         vertical: false,
+        infinite: true,
 
         autoPlay: true,
         autoPlaySpeed: 50,
         autoPlay_delay: 0,
-        infinite: true,
         distance: 1,
         smooth: true,
         smooth_distance: 1,
-        //centerMode: false,
+        direction: 1,
 
         slideClass: '',
 
@@ -47,6 +46,10 @@
         // 开始初始化
         _.isInitialized = false;
         _.init();
+
+        if (_.options.autoPlay) {
+            _.autoPlay();
+        }
     }
 
     /**
@@ -74,7 +77,7 @@
     ZScroll.genCSSObj = function (cssProp) {
         console.debug('genCssDim(%s)', cssProp);
         var funcBody = '' +
-            'console.log(\'genCss -> \', { ' + cssProp + ': dimensions });' +
+            'console.debug(\'genCss -> \', { ' + cssProp + ': dimensions });' +
             'return { ' + cssProp + ': dimensions }';
         return new Function('dimensions', funcBody);
     };
@@ -100,7 +103,11 @@
         _.currentSlide = 0;
 
         // 滚动参数
+        _.Timer = null;
         _.animating = false;
+        _.stepping = false;
+        _.paused = false;
+        _.isFirstLoop = true;
 
         // 申明私有元素参数,在 _buildWrap() 中被初始化
         _.$list = null; // 幻灯片可展示的父容器
@@ -119,9 +126,10 @@
 
         _._setupInfinite();
         _._initPosition();
+        _._initEvents();
 
-        _.minOffset = _._getLeft(0); // 最小偏移量
-        _.maxOffset = _._getLeft(_.count - 1, true); // 最大偏移量
+        _.minOffset = _._getLeft(_.count - 1, true); // 最小偏移量
+        _.maxOffset = _._getLeft(0); // 最大偏移量
 
         // 初始化完毕
         _.$ele.addClass('ZScroll-initialized');
@@ -252,9 +260,25 @@
         _.$track.css(_.genCssDim(totalDim)); // 初始化幻灯片路径尺寸
 
         _.currentSlide = _.options.initialSlide; // 初始化当前幻灯片偏移
-        _.currentOffset = _._getLeft(_.currentSlide); // 初始化当前track偏移量
-        _.$track.css(_.genCssPostion(_.currentOffset));
 
+
+        if (_.options.direction === 1) {
+            _.currentOffset = _._getLeft(_.currentSlide); // 初始化当前track偏移量
+        } else {
+            _.currentOffset = _._getLeft(_.currentSlide, true); // 初始化当前track偏移量
+        }
+        _.$track.css(_.genCssPostion(_.currentOffset));
+    };
+
+    /**
+     * 初始化插件事件
+     * @private
+     */
+    ZScroll.prototype._initEvents = function () {
+        var _ = this;
+
+        _.$list.on('mouseenter.ZScroll', $.proxy(_._setPaused, _, true));
+        _.$list.on('mouseleave.ZScroll', $.proxy(_._setPaused, _, false));
     };
 
     /**
@@ -281,7 +305,9 @@
             dim -= (_.$list[_.PROP_DIM]() - _._getDim(_.$slides.get(index)));
         }
 
-        dim += _._getPrefixDim();
+        if (_.options.infinite) {
+            dim += _._getPrefixDim();
+        }
 
         return -dim;
     };
@@ -351,13 +377,124 @@
 
         _.slide(_.currentSlide + 1);
     };
+
+    /**
+     * 停止自动播放
+     */
+    ZScroll.prototype.pause = function () {
+        console.debug('pause()');
+
+        this._setPaused(true);
+    };
+
+    /**
+     * 重新开始自动播放
+     */
+    ZScroll.prototype.resume = function () {
+        console.debug('resume()');
+
+        this._setPaused(false);
+    };
+
+    /**
+     * 设置开始或暂停
+     * @param paused
+     * @private
+     */
+    ZScroll.prototype._setPaused = function (paused) {
+        var _ = this;
+        console.debug('_setPaused()');
+
+
+        if (_.options.autoPlay && _.options.pauseOnHover) {
+            _.paused = paused;
+        }
+    };
+
+    /**
+     * 开始自动播放
+     * @issue 自动播放时,如果有人为接入切换,自动播放会坏掉
+     */
+    ZScroll.prototype.autoPlay = function () {
+        var _ = this;
+        console.debug('autoPlay()');
+
+        _.Timer && clearTimeout(_.Timer);
+
+        setTimeout(function() {
+            _._autoPlayIterator();
+        }, _.options.autoPlay_delay);
+    };
+
+    /**
+     * 自动播放逻辑
+     * @private
+     */
+    ZScroll.prototype._autoPlayIterator = function () {
+        var _ = this;
+        console.debug('_autoPlayIterator()');
+
+        var nextIndex = _.currentSlide + (_.options.direction === 1? 1 : -1);
+
+        _._autoPlayStep(nextIndex, function () {
+            _.Timer = setTimeout(function() {
+                _._autoPlayIterator();
+            }, _.options.sleep);
+        });
+    };
+
+    /**
+     * 自动播放指定幻灯片
+     * @param index
+     * @private
+     */
+    ZScroll.prototype._autoPlayStep = function (index, callback) {
+        var _ = this;
+        console.debug('_autoPlayStep()');
+
+        if (_.smooth) {
+            // TODO
+            _.stepping = true;
+
+            _.Timer = setInterval(function () {
+
+            }, _.options.autoPlaySpeed);
+
+        } else {
+            if (_.paused) {
+                setTimeout(function () {
+                    _._autoPlayStep(index, callback);
+                }, 50);
+                return false;
+            }
+
+            _.slide(index, function () {
+                callback && callback();
+            });
+        }
+    };
+
+    /**
+     * 停止自动播放
+     */
+    ZScroll.prototype.autoPlayClear = function () {
+        var _ = this;
+        console.debug('autoPlayClear()');
+
+        if (_.Timer) {
+            clearInterval(_.Timer);
+        }
+    };
+
     /**
      * 滚动到指定幻灯片,值为你幻灯片的偏移量,从零开始,最大值是幻灯片树-1.
      * @param index
+     * @param callback
      */
-    ZScroll.prototype.slide = function (index) {
+    ZScroll.prototype.slide = function (index, callback) {
         var _ = this;
         console.debug('slide(%d)', index);
+
         var offset = 0;
         var originIndex = index;
         var isOverflow = index <0 || index >= _.count;
@@ -374,17 +511,24 @@
         offset = _._getLeft(index, pvp);
 
         if (!_.options.infinite) {
-            if (index < 0 || index >= _.count) {
+            if (isOverflow) {
                 console.warn('指定偏移 > 幻灯片总数');
                 return false;
             }
 
-            if (index === _.count) {
+            // 出了右边界
+            if (offset < _.minOffset) {
+                offset = _.minOffset;
+            }
+
+            // 出了左边界
+            if (offset > _.maxOffset) {
                 offset = _.maxOffset;
             }
-            if (index === 0) {
-                offset = 0;
-            }
+        }
+
+        if (offset === _.currentOffset) {
+            return false;
         }
 
         _.animating = true;
@@ -394,6 +538,8 @@
             _.animating =  false;
 
             _._postSlide();
+
+            callback && callback();
         });
     };
 
