@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="demo.css"/>
 </head>
 <body>
-<div id="J_Scroll" class="ZScroll">
+<h1>Demo 1</h1>
+<div id="J_Scroll1" class="ZScroll">
     <div>
         <a href="#"><img src="img/f1.jpg" alt=""/></a>
     </div>
@@ -25,38 +26,84 @@
         <a href="#"><img src="img/f5.jpg" alt=""/></a>
     </div>
 </div>
-<div>
-    <a href="#" id="J_Scroll_prev">上</a>
-    <a href="#" id="J_Scroll_next">下</a>
+<h1>Demo 2</h1>
+<div id="J_Scroll2" class="ZScroll">
+    <div>
+        <a href="#"><img src="img/f1.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f2.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f3.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f4.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f5.jpg" alt=""/></a>
+    </div>
+</div>
+<h1>Demo 3</h1>
+<div id="J_Scroll3" class="ZScroll">
+    <div>
+        <a href="#"><img src="img/f1.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f2.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f3.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f4.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f5.jpg" alt=""/></a>
+    </div>
 </div>
 <div id="J_currentLeft"></div>
 <script src="jquery.js"></script>
 <script src="../src/ZScroll.js"></script>
 <script>
     $(window).on('load', function (e) {
-        var ele = document.getElementById('J_Scroll');
-        var options = {
+        $('#J_Scroll1').zScroll({
             autoPlay: true,
-            speed: 500,
-            sleep: 500,
+            autoPlaySpeed: 20,
+            speed: 20,
+            sleep: 0,
             distance: 1,
-            direction: 0,
+            direction: 1,
             initialSlide: 0,
             pauseOnHover: true,
-//        vertical: true,
+            infinite: true,
+            smooth: true,
+        });
+        $('#J_Scroll2').zScroll({
+            autoPlay: true,
+            autoPlaySpeed: 20,
+            speed: 500,
+            sleep: 2000,
+            distance: 1,
+            direction: 1,
+            initialSlide: 0,
+            pauseOnHover: true,
             infinite: true,
             smooth: false,
-
-            debug: false,
-        };
-        window._ = new ZScroll(ele, options);
-
-        J_Scroll_prev.onclick = function () {
-            _.prev();
-        };
-        J_Scroll_next.onclick = function () {
-            _.next();
-        };
+        });
+        $('#J_Scroll3').zScroll({
+            autoPlay: true,
+            autoPlaySpeed: 20,
+            speed: 500,
+            sleep: 2000,
+            distance: 1,
+            direction: 1,
+            initialSlide: 0,
+            pauseOnHover: true,
+            vertical: true,
+            infinite: true,
+            smooth: false,
+        });
     });
 </script>
 </body>

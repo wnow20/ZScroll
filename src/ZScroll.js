@@ -9,12 +9,11 @@
         vertical: false,
         infinite: true,
 
-        autoPlay: true,
+        autoPlay: false,
         autoPlaySpeed: 50,
         autoPlay_delay: 0,
         distance: 1,
         smooth: true,
-        smooth_distance: 1,
         direction: 1,
 
         slideClass: '',
@@ -405,7 +404,6 @@
         var _ = this;
         console.debug('_setPaused()');
 
-
         if (_.options.autoPlay && _.options.pauseOnHover) {
             _.paused = paused;
         }
@@ -419,59 +417,18 @@
         var _ = this;
         console.debug('autoPlay()');
 
-        _.Timer && clearTimeout(_.Timer);
+        _.autoPlayClear();
 
-        setTimeout(function() {
-            _._autoPlayIterator();
-        }, _.options.autoPlay_delay);
-    };
+        var time = _.isFirstLoop? _.options.autoPlay_delay : _.options.sleep;
+        console.debug(time);
+        _.Timer = setTimeout(function() {
+            var nextIndex = _.currentSlide + (_.options.direction === 1? 1 : -1);
 
-    /**
-     * 自动播放逻辑
-     * @private
-     */
-    ZScroll.prototype._autoPlayIterator = function () {
-        var _ = this;
-        console.debug('_autoPlayIterator()');
-
-        var nextIndex = _.currentSlide + (_.options.direction === 1? 1 : -1);
-
-        _._autoPlayStep(nextIndex, function () {
-            _.Timer = setTimeout(function() {
-                _._autoPlayIterator();
-            }, _.options.sleep);
-        });
-    };
-
-    /**
-     * 自动播放指定幻灯片
-     * @param index
-     * @private
-     */
-    ZScroll.prototype._autoPlayStep = function (index, callback) {
-        var _ = this;
-        console.debug('_autoPlayStep()');
-
-        if (_.smooth) {
-            // TODO
-            _.stepping = true;
-
-            _.Timer = setInterval(function () {
-
-            }, _.options.autoPlaySpeed);
-
-        } else {
-            if (_.paused) {
-                setTimeout(function () {
-                    _._autoPlayStep(index, callback);
-                }, 50);
-                return false;
-            }
-
-            _.slide(index, function () {
-                callback && callback();
+            _.slide(nextIndex, function () {
+                _.autoPlay();
             });
-        }
+        }, time);
+        _.isFirstLoop = false;
     };
 
     /**
@@ -481,9 +438,7 @@
         var _ = this;
         console.debug('autoPlayClear()');
 
-        if (_.Timer) {
-            clearInterval(_.Timer);
-        }
+        _.Timer && clearTimeout(_.Timer);
     };
 
     /**
@@ -507,6 +462,7 @@
         if (_.animating) {
             return false;
         }
+        _.autoPlayClear();
 
         offset = _._getLeft(index, pvp);
 
@@ -564,12 +520,49 @@
         var _ = this;
         console.debug('slideTo(%s)', targetOffset);
 
-        _.$track.animate(_.genCssPostion(targetOffset), _.options.speed, function () {
-            console.debug('animated');
+        // 平滑滚动,用于自动播放
+        _.smoothTimer = null;
+        _.smoothTimerOffset = _.currentOffset;
+        if (_.options.smooth) {
+            _.smoothTimer = setInterval(function () {
+                _.smoothTimerOffset = nextStep();
+                _.stepping = true;
+                _.$track.css(_.genCssPostion(_.smoothTimerOffset));
+                _.currentOffset = _.smoothTimerOffset;
+                _.stepping = false;
 
-            callback();
-        });
+                if (_.smoothTimerOffset === targetOffset) {
+                    _.smoothTimer && clearInterval(_.smoothTimer);
+                    callback && callback();
+                }
+            }, _.options.autoPlaySpeed);
+        } else {
+            _.$track.finish();
+            _.$track.animate(_.genCssPostion(targetOffset), _.options.speed, function () {
+                console.debug('animated');
+
+                callback && callback();
+            });
+        }
+
+        var sign = targetOffset - _.currentOffset > 0 ? 1 : -1;
+        function nextStep() {
+            console.debug('nextStep');
+            var offset = _.currentOffset + sign * _.options.distance;
+
+            // 越界处理
+            if (sign === 1 && offset > targetOffset) {
+                offset = targetOffset;
+            }
+            if (sign === -1 && offset < targetOffset) {
+                offset = targetOffset;
+            }
+
+
+            return offset;
+        }
     };
+
 
     /**
      * 移动结束之后干点什么
@@ -610,14 +603,18 @@
         console.debug('始末点互换 exchange()');
 
         var form = -1 * _._getPrefixDim();
-        var to = _._getLeft(_.count - 2);
+        var to = _._getLeft(_.count - 1, true);
 
         if (_.currentOffset >= form) {
-            _.$track.css(_.genCssPostion(_.currentOffset - _._getAllDim()));
+            _.currentOffset = _.currentOffset - _._getAllDim();
+            _.$track.css(_.genCssPostion(_.currentOffset));
+            console.debug('成功始末点互换');
             return ;
         }
         if (_.currentOffset <= to) {
-            _.$track.css(_.genCssPostion(_.currentOffset + _._getAllDim()));
+            _.currentOffset = _.currentOffset + _._getAllDim();
+            _.$track.css(_.genCssPostion(_.currentOffset));
+            console.debug('成功始末点互换');
             return ;
         }
     };
@@ -676,8 +673,11 @@
      * 设置ZScroll为jQuery插件
      */
     $.fn.extend({
-        zScroll: function() {
-
+        zScroll: function(options) {
+            var _ = this;
+            _.each(function (index, ele) {
+                ele.zScroll = new ZScroll(ele, options);
+            });
         }
     });
 
