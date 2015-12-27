@@ -101,6 +101,10 @@
         _.currentOffset = 0;
         _.currentSlide = 0;
 
+
+        // 幻灯片过少
+        _.shortSlide = false;
+
         // 滚动参数
         _.Timer = null;
         _.animating = false;
@@ -117,8 +121,8 @@
 
         // 申明用于无限循环的元素参数,在 _cloneSlide 中被初始化
         _.$slidesWithCloned = null; // 所有的幻灯片,包含克隆的
-        _.$prefix = null; // 前缀克隆幻灯片
-        _.$suffix = null; // 后缀克隆幻灯片
+        _.$prefix = $(); // 前缀克隆幻灯片
+        _.$suffix = $(); // 后缀克隆幻灯片
 
         _._buildWrap();
         _.count = _.$slides.length; // 幻灯片数量
@@ -158,7 +162,7 @@
         console.debug('生成插件的DOM结构 _buildWrap()');
 
         if (_.$ele.find('.ZScroll-list').length) {
-            console.error('element had been initialized, don\'t initialize again');
+            throw new Error('element had been initialized, don\'t initialize again');
         }
 
         _.$slides =
@@ -186,10 +190,16 @@
      */
     ZScroll.prototype._setupInfinite = function () {
         var _ = this;
+        console.debug('_setupInfinite');
+
+        // 如果元素不够无需克隆
+        if (_.$list[_.PROP_DIM]() > _._getAllDim()) {
+            _.shortSlide = true;
+            return false;
+        }
         if (!_.options.infinite) {
             return false;
         }
-        console.debug('_setupInfinite');
 
         _._cloneSlide();
     };
@@ -202,12 +212,6 @@
         var _ = this;
         console.debug('_cloneSlide()');
         var vpDim = _.$list[_.PROP_DIM]();
-
-
-        // 如果元素不够无需克隆
-        if (vpDim > _._getAllDim()) {
-            return false;
-        }
 
         var pw = 0, nw = 0;
         var slide = null;
@@ -456,12 +460,18 @@
         var pvp = !_.currentDirection;
 
         index = _._transforIndex(index);
+
+        if (_.shortSlide) {
+            return false;
+        }
+
         _._prevSlide(index);
 
         // 正在滚动则取消此次滚动行为
         if (_.animating) {
             return false;
         }
+
         _.autoPlayClear();
 
         offset = _._getLeft(index, pvp);
@@ -505,10 +515,13 @@
      * @private
      */
     ZScroll.prototype._transforIndex = function (index) {
+        var _ = this;
+        console.debug('_transforIndex');
+
         while(index < 0) {
-            index += 5;
+            index += _.count;
         }
-        return index % 5;
+        return index % _.count;
     };
 
     /**
@@ -525,6 +538,9 @@
         _.smoothTimerOffset = _.currentOffset;
         if (_.options.smooth) {
             _.smoothTimer = setInterval(function () {
+                if (_.paused) {
+                    return false;
+                }
                 _.smoothTimerOffset = nextStep();
                 _.stepping = true;
                 _.$track.css(_.genCssPostion(_.smoothTimerOffset));
@@ -674,10 +690,24 @@
      */
     $.fn.extend({
         zScroll: function(options) {
-            var _ = this;
-            _.each(function (index, ele) {
-                ele.zScroll = new ZScroll(ele, options);
-            });
+            var _ = this,
+                opt = arguments[0],
+                args = Array.prototype.slice.call(arguments, 1),
+                l = _.length,
+                i,
+                ret;
+
+            for (i = 0; i < l; i++) {
+                if (typeof opt === 'object' || typeof opt === 'undefined') {
+                    _[i].zScroll = new ZScroll(_[i], opt);
+                }
+                if (_[i].zScroll && isString(opt)) {
+                    ret = _[i].zScroll[opt].apply(_[i].zScroll, args);
+                }
+                if (typeof ret != 'undefined') return ret;
+            }
+
+            return _;
         }
     });
 

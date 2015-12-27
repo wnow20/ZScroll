@@ -1,4 +1,22 @@
-/*demo1*/
+/*demo 0*/
+#J_Scroll {
+    width: 500px;
+    height: 200px;
+}
+#J_Scroll.ZScroll-vertical {
+    width: 150px;
+    height: 500px;
+}
+#J_Scroll .ZScroll-item {
+}
+#J_Scroll .ZScroll-item a {
+    display: block;
+}
+#J_Scroll .ZScroll-item img {
+    vertical-align: top;
+}
+
+/*demo 1*/
 #J_Scroll1 {
     width: 500px;
     height: 200px;
@@ -16,7 +34,7 @@
     vertical-align: top;
 }
 
-/*demo2*/
+/*demo 2*/
 #J_Scroll2 {
     width: 500px;
     height: 200px;
