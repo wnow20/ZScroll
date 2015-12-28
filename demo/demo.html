@@ -74,6 +74,16 @@
         <a href="#"><img src="img/f5.jpg" alt=""/></a>
     </div>
 </div>
+
+<h1>Demo 4</h1>
+<div id="J_Scroll4" class="ZScroll">
+    <div>
+        <a href="#"><img src="img/f1.jpg" alt=""/></a>
+    </div>
+    <div>
+        <a href="#"><img src="img/f2.jpg" alt=""/></a>
+    </div>
+</div>
 <div id="J_currentLeft"></div>
 <script src="jquery.js"></script>
 <script src="../src/ZScroll.js"></script>
@@ -128,6 +138,21 @@
             vertical: true,
             infinite: true,
             smooth: false,
+        });
+        $('#J_Scroll4').zScroll({
+            autoPlay: true,
+            autoPlaySpeed: 20,
+            speed: 500,
+            sleep: 2000,
+            autoPlay_delay: 2000,
+            distance: 1,
+            direction: 1,
+            initialSlide: 0,
+            pauseOnHover: true,
+            vertical: true,
+            infinite: true,
+            smooth: false,
+            debug: true,
         });
     });
 </script>

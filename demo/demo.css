@@ -69,3 +69,21 @@
 #J_Scroll3 .ZScroll-item img {
     vertical-align: top;
 }
+
+/*demo 4*/
+#J_Scroll4 {
+    width: 280px;
+    height: 200px;
+}
+#J_Scroll4.ZScroll-vertical {
+    width: 150px;
+    height: 380px;
+}
+#J_Scroll4 .ZScroll-item {
+}
+#J_Scroll4 .ZScroll-item a {
+    display: block;
+}
+#J_Scroll4 .ZScroll-item img {
+    vertical-align: top;
+}

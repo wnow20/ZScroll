@@ -621,16 +621,16 @@
         var form = -1 * _._getPrefixDim();
         var to = _._getLeft(_.count - 1, true);
 
-        if (_.currentOffset >= form) {
+        if (_.currentOffset > form) {
             _.currentOffset = _.currentOffset - _._getAllDim();
             _.$track.css(_.genCssPostion(_.currentOffset));
-            console.debug('成功始末点互换');
+            console.debug('成功始末点互换 起 → 末');
             return ;
         }
-        if (_.currentOffset <= to) {
+        if (_.currentOffset < to) {
             _.currentOffset = _.currentOffset + _._getAllDim();
             _.$track.css(_.genCssPostion(_.currentOffset));
-            console.debug('成功始末点互换');
+            console.debug('成功始末点互换 末 → 起');
             return ;
         }
     };
@@ -643,6 +643,28 @@
         var _ = this;
         console.debug('reinit()');
 
+        _.pause();
+        _.$track.finish();
+
+        // 如果元素不够无需克隆
+        if (_.$list[_.PROP_DIM]() > _._getAllDim()) {
+            _.shortSlide = true;
+            return false;
+        }
+
+        // 如果上下滚动
+        if (_.options.vertical) {
+            _.$ele.addClass('ZScroll-vertical');
+        }
+
+
+        _.minOffset = _._getLeft(_.count - 1, true); // 最小偏移量
+        _.maxOffset = _._getLeft(0); // 最大偏移量
+
+        _.resume();
+        if (_.autoPlay) {
+            _.autoPlay();
+        }
     };
 
     /**
