@@ -3,6 +3,9 @@ ZScroll
 
 a simple carousel, vertical, smooth scroll.
 
+#### Current version
+ 0.0.1
+
 #### Demos & Docs
 [http://wnow20.github.io/ZScroll](http://wnow20.github.io/ZScroll)
 
@@ -55,6 +58,7 @@ jQuery 1.7
 + CssEase
 + Responsive
 + Draggable
++ add package manager and gulp
 
 #### Contributing
 PLEASE review CONTRIBUTING.md prior to requesting a feature, filing a pull request or filing an issue.

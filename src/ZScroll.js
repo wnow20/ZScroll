@@ -1,4 +1,4 @@
-(function(w,$) {
+(function (w, $) {
     var doc = w.document;
 
     var defaults = {
@@ -30,7 +30,7 @@
     function ZScroll(ele, options) {
         var _ = this;
 
-        _.ele = isString(ele)? get(ele) : ele;
+        _.ele = isString(ele) ? get(ele) : ele;
         _.$ele = $(_.ele);
         _.options = extend({}, defaults, options);
 
@@ -59,9 +59,9 @@
         console.debug('cssFactory()');
 
         // 尺寸属性
-        _.PROP_DIM = _.options.vertical? 'height' : 'width';
+        _.PROP_DIM = _.options.vertical ? 'height' : 'width';
         // 位置属性
-        _.PROP_POSITION = _.options.vertical? 'top' : 'left';
+        _.PROP_POSITION = _.options.vertical ? 'top' : 'left';
         // 设置容器大小,只控制一边(高或宽),由 vertial 参数决定控制哪一边.
         _.genCssDim = ZScroll.genCSSObj(_.PROP_DIM);
         // 设置容器位置,只控制一边(top或left),由 vertial 参数决定控制哪一边.
@@ -356,7 +356,7 @@
         var _ = this;
         console.debug('_getDim -> ', $ele);
 
-        $ele = ($ele instanceof Element)? $($ele) : $ele;
+        $ele = ($ele instanceof Element) ? $($ele) : $ele;
 
         return $ele[_.PROP_DIM]();
     };
@@ -423,10 +423,10 @@
 
         _.autoPlayClear();
 
-        var time = _.isFirstLoop? _.options.autoPlay_delay : _.options.sleep;
+        var time = _.isFirstLoop ? _.options.autoPlay_delay : _.options.sleep;
         console.debug(time);
-        _.Timer = setTimeout(function() {
-            var nextIndex = _.currentSlide + (_.options.direction === 1? 1 : -1);
+        _.Timer = setTimeout(function () {
+            var nextIndex = _.currentSlide + (_.options.direction === 1 ? 1 : -1);
 
             _.slide(nextIndex, function () {
                 _.autoPlay();
@@ -456,7 +456,7 @@
 
         var offset = 0;
         var originIndex = index;
-        var isOverflow = index <0 || index >= _.count;
+        var isOverflow = index < 0 || index >= _.count;
         var pvp = !_.currentDirection;
 
         index = _._transforIndex(index);
@@ -501,7 +501,7 @@
         _.slideTo(offset, function () {
             _.currentOffset = offset;
             _.currentSlide = index;
-            _.animating =  false;
+            _.animating = false;
 
             _._postSlide();
 
@@ -518,7 +518,7 @@
         var _ = this;
         console.debug('_transforIndex');
 
-        while(index < 0) {
+        while (index < 0) {
             index += _.count;
         }
         return index % _.count;
@@ -562,6 +562,7 @@
         }
 
         var sign = targetOffset - _.currentOffset > 0 ? 1 : -1;
+
         function nextStep() {
             console.debug('nextStep');
             var offset = _.currentOffset + sign * _.options.distance;
@@ -625,13 +626,13 @@
             _.currentOffset = _.currentOffset - _._getAllDim();
             _.$track.css(_.genCssPostion(_.currentOffset));
             console.debug('成功始末点互换 起 → 末');
-            return ;
+            return;
         }
         if (_.currentOffset < to) {
             _.currentOffset = _.currentOffset + _._getAllDim();
             _.$track.css(_.genCssPostion(_.currentOffset));
             console.debug('成功始末点互换 末 → 起');
-            return ;
+            return;
         }
     };
 
@@ -694,7 +695,7 @@
         if (!console._debug && console.debug === noop) {
             return false;
         }
-        var debug = (console.debug !== noop)? console.debug : console._debug;
+        var debug = (console.debug !== noop) ? console.debug : console._debug;
 
         if (boolean || 'undefined' === typeof boolean) {
             console.debug = debug;
@@ -711,7 +712,7 @@
      * 设置ZScroll为jQuery插件
      */
     $.fn.extend({
-        zScroll: function(options) {
+        zScroll: function (options) {
             var _ = this,
                 opt = arguments[0],
                 args = Array.prototype.slice.call(arguments, 1),
@@ -765,7 +766,7 @@
     function merge(target, source) {
         for (var prop in source) {
             if (!source.hasOwnProperty(prop)) {
-                continue ;
+                continue;
             }
             target[prop] = source[prop];
         }
@@ -801,6 +802,7 @@
     /**
      * 空方法
      */
-    function noop() {}
+    function noop() {
+    }
 
 }(window, jQuery || Zepto));
