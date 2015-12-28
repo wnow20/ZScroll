@@ -6,10 +6,24 @@ a simple carousel, vertical, smooth scroll.
 #### Demos & Docs
 [http://wnow20.github.io/ZScroll](http://wnow20.github.io/ZScroll)
 
-#### Contributing
-PLEASE review CONTRIBUTING.md prior to requesting a feature, filing a pull request or filing an issue.
+#### Features
++ infinite slide
++ autoPlay
++ smooth scroll
 
 #### Example
+write your DOM
+```html
+<div class="ZScroll">
+  <div>
+    something...
+  </div>
+  <div>
+    something...
+  </div>
+  ...
+</div>
+```
 
 Include ZScroll files
 ```html
@@ -29,6 +43,21 @@ $(window).on('load', function (e) {
 #### Dependencies
 
 jQuery 1.7
+
+#### Next move?
++ Events callback
++ Slide buttons, eg. dots arrows
++ data-* settings
++ Dynamic add/remove slides
++ Better animation
++ Lazyload
++ Custom template
++ CssEase
++ Responsive
++ Draggable
+
+#### Contributing
+PLEASE review CONTRIBUTING.md prior to requesting a feature, filing a pull request or filing an issue.
 
 #### License
 
