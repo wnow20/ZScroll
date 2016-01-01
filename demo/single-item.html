@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="ZScroll single-item">
+    <div><span>1</span></div>
+    <div><span>2</span></div>
+    <div><span>3</span></div>
+    <div><span>4</span></div>
+    <div><span>5</span></div>
+    <div><span>6</span></div>
+</div>
+<script src="jquery.js"></script>
+<link rel="stylesheet" href="../src/ZScroll.css"/>
+<script src="../src/ZScroll.js"></script>
+<style>
+    .single-item {
+        width: 500px;
+    }
+    .single-item span {
+        display: block;
+        width: 500px;
+        height: 200px;
+        line-height: 200px;
+        text-align: center;
+        background: rgb(60,60,60);
+        font-size: 24px;
+        color: #f5f5f5;
+    }
+</style>
+<script>
+    $(function () {
+        J_single_item = $('.single-item').zScroll({
+            autoPlay: true,
+            debug: true
+        });
+    });
+</script>
+</body>
+</html>

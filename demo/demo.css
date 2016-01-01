@@ -1,0 +1,89 @@
+/*demo 0*/
+#J_Scroll {
+    width: 500px;
+    height: 200px;
+}
+#J_Scroll.ZScroll-vertical {
+    width: 150px;
+    height: 500px;
+}
+#J_Scroll .ZScroll-item {
+}
+#J_Scroll .ZScroll-item a {
+    display: block;
+}
+#J_Scroll .ZScroll-item img {
+    vertical-align: top;
+}
+
+/*demo 1*/
+#J_Scroll1 {
+    width: 500px;
+    height: 200px;
+}
+#J_Scroll1.ZScroll-vertical {
+    width: 150px;
+    height: 500px;
+}
+#J_Scroll1 .ZScroll-item {
+}
+#J_Scroll1 .ZScroll-item a {
+    display: block;
+}
+#J_Scroll1 .ZScroll-item img {
+    vertical-align: top;
+}
+
+/*demo 2*/
+#J_Scroll2 {
+    width: 500px;
+    height: 200px;
+}
+#J_Scroll2.ZScroll-vertical {
+    width: 150px;
+    height: 500px;
+}
+#J_Scroll2 .ZScroll-item {
+}
+#J_Scroll2 .ZScroll-item a {
+    display: block;
+}
+#J_Scroll2 .ZScroll-item img {
+    vertical-align: top;
+}
+
+/*demo 3*/
+#J_Scroll3 {
+    width: 500px;
+    height: 200px;
+}
+#J_Scroll3.ZScroll-vertical {
+    width: 150px;
+    height: 500px;
+}
+#J_Scroll3 .ZScroll-item {
+}
+#J_Scroll3 .ZScroll-item a {
+    display: block;
+}
+#J_Scroll3 .ZScroll-item img {
+    vertical-align: top;
+}
+
+/*demo 4*/
+#J_Scroll4 {
+    width: 280px;
+    height: 200px;
+}
+#J_Scroll4.ZScroll-vertical {
+    width: 150px;
+    height: 380px;
+}
+#J_Scroll4 .ZScroll-item {
+}
+#J_Scroll4 .ZScroll-item a {
+    display: block;
+}
+#J_Scroll4 .ZScroll-item img {
+    vertical-align: top;
+}
